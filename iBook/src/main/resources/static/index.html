@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<link rel="stylesheet" href="css/all.css"/>
+<link rel="stylesheet" href="css/style.css"/>
+<title>iBook</title>
+</head>
+<body>
+	<header>
+		<input type="search" id="search" placeholder="search"/>
+		<button id="add-post" type="button">Add Post</button>
+	</header>
+	<div id="create-post-popup">
+		<textarea></textarea>
+		<button id="save-post-button" type="button">Save</button>
+		<button id="cancel-post-button" type="button">Cancel</button>
+		<button id="delete-post-button" type="button">Delete</button>
+	</div>
+	<div id="add-comment-popup">
+		<textarea></textarea>
+		<button id="save-comment" type="button">Save</button>
+		<button id="cancel-comment" type="button">Cancel</button>		
+		<button id="delete-comment" type="button">Delete</button>
+	</div>
+	
+	<main>
+		<div id="post-template">
+			<div>
+				<span class="user-name"></span>
+				<i class="far fa-edit editable"></i>
+			</div>
+			<div class="post-content"></div>
+			<div>
+				<i class="far fa-comment-alt comment-icon"></i>				
+				<a class="comment-count" href="#"></a>
+			</div>
+			<div class="comment-template">
+			</div>
+		</div>
+	</main>
+</body>
+</html>
