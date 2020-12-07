@@ -3,7 +3,7 @@ $(function() {
 	var editId = 0;
 	var commentPostId = 0;
 	var offset = 0;
-	var limit = 6;
+	var limit = 11;
 	var ajaxDone = true;
 	var morePages = true;
 	
@@ -26,14 +26,14 @@ $(function() {
 	
 	function scrolled() {
 		if (ajaxDone && morePages) {
-			var size = $("body").height();
+			var size = $("main").height();
 			var height = $(this).height();
 			var top = $(this).scrollTop();
-			//console.log(size, height, top);	
+			console.log("size, height, top:", size, height, top);	
 			if (top >= size - height) {
-				console.log(size - height);
+				console.log("size - height:", size - height);
 				offset += limit;
-				console.log(offset);
+				console.log("offset:", offset);
 				getPosts();
 			}			
 		}
@@ -91,7 +91,7 @@ $(function() {
 			},
 			error: ajaxError,
 			success: function(data) {
-				console.log(data);
+				//console.log(data);
 				$("#add-comment-popup").hide();
 				reloadPosts();
 			}
@@ -125,7 +125,6 @@ $(function() {
 				if ( data.length < limit) {
 					morePages = false;
 				}
-				//offset = 0;
 				buildPosts(data);
 			}
 		});
@@ -183,9 +182,7 @@ $(function() {
 	function getComments() {
 	
 		var postId = $(this).parent().parent().find(".editable").data("id");
-		var $commentTemplate = $(this).parent().parent().find(".comment-template");
-		
-		console.log("postId: " + postId);
+		var $commentTemplate = $(this).parent().parent().find(".comment-template");		
 		
 		$.ajax({
 			url: "/get-comments",
@@ -194,7 +191,7 @@ $(function() {
 			data: { postId },
 			error: ajaxError,
 			success: function(data) {
-				console.log(data);				
+				//console.log(data);				
 				buildComments(data, $commentTemplate);
 			}
 		});
@@ -217,6 +214,11 @@ $(function() {
 		resetPost();		
 	}
 	
+	function resetPost() {
+		editId = 0;
+		$("#create-post-popup textarea").val("");		
+	}
+	
 	function showEditPost() {
 		$("#delete-post-button").show();
 		var text = $(this).parent().parent().find(".post-content").text();
@@ -225,17 +227,13 @@ $(function() {
 		$("main").addClass("main-add-popup");
 		var id = $(this).data("id");
 		editId = id;
-	}
-	
-	function resetPost() {
-		editId = 0;
-		$("#create-post-popup textarea").val("");		
-	}
+	}	
 	
 	function reloadPosts() {	
 		removeAddPost();
-		offset = 0;
 		$(".post").remove();
+		offset = 0;
+		ajaxDone = false;
 		getPosts();
 	}
 	
@@ -260,7 +258,6 @@ $(function() {
 		var $popup = $("#add-comment-popup").detach();
 		$(this).parent().parent().after($popup);
 		$popup.show();
-		console.log("commentPostId: " + commentPostId);
 	}
 	
 	function closeAddComment() {
@@ -269,8 +266,7 @@ $(function() {
 	}
 	
 	function buildPosts(data) {
-		console.log(data);
-		
+		//console.log(data);		
 		for (var i = 0; i < data.length; i++) {
 			var $post = $("#post-template").clone();
 			$post.removeAttr("id");

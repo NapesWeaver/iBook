@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="posts")
-@SecondaryTable(name="post_comments")
+//@SecondaryTable(name="post_comments")
 public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,11 +35,11 @@ public class Post {
 	@Transient
 	private boolean editable;
 	
-	@Column(name="comment_count", table="post_comments", insertable=false, updatable=false)
-	private Integer commentCount;
+//	@Column(name="comment_count", table="post_comments", insertable=false, updatable=false)
+//	private Integer commentCount;
 	
-	//@Transient
-	//private int commentCount;
+	@Transient
+	private int commentCount;
 	
 	public int getId() {
 		return id;
@@ -81,13 +81,13 @@ public class Post {
 		this.editable = editable;
 	}
 	
-	public Integer getCommentCount() {
+//	public Integer getCommentCount() {
+//		return commentCount;
+//	}
+	
+	public int getCommentCount() {
 		return commentCount;
 	}
-	
-	/*public int getCommentCount() {
-		return commentCount;
-	}*/
 	
 	public void setCommentCount(int commentCount) {
 		this.commentCount = commentCount;

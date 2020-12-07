@@ -83,9 +83,7 @@ public class Comment {
 
 	public void setEditable(boolean editable) {
 		this.editable = editable;
-	}
-
-	
+	}	
 }
 
 

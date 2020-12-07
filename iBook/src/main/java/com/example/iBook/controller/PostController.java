@@ -61,18 +61,18 @@ public class PostController {
 		//List<Post> posts = (List<Post>) PostRepo.findAll();
 		Pageable page = PageRequest.of(offset / limit, limit);
 		List<Post> posts = (List<Post>) PostRepo.findAllByOrderByDateDesc(page);
-		//List<Integer> commentPostIds = CommentRepo.getCommentPostIds();
+		List<Integer> commentPostIds = CommentRepo.getCommentPostIds();
 		for (Post post: posts) {			
-			//int commentCount = 0;			
+			int commentCount = 0;			
 			if (name.equals(post.getUser().getName())) {
 				post.setEditable(true);
 			}			
-			/*for (int commentPostId: commentPostIds) {				
+			for (int commentPostId: commentPostIds) {				
 				if (commentPostId == post.getId()) {					
 					commentCount += 1;
 				}
 				post.setCommentCount(commentCount);
-			}*/
+			}
 		}
 		return posts;
 	}
