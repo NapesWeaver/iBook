@@ -12,7 +12,7 @@ public interface CommentRepository extends PagingAndSortingRepository<Comment, I
 	
 	public List<Comment> findAll();	
 	//public List<Comment> findByPostId(int id);	
-	public List<Comment> findAllByPostOrderByDateAsc(Post post);	
+	public List<Comment> findAllByPostOrderByDateAsc(Post post);		
 	@Query(value = "SELECT comment_post_id FROM comments", nativeQuery = true)
 	public List<Integer> getCommentPostIds();
 }

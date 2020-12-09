@@ -6,6 +6,9 @@ $(function() {
 	var limit = 11;
 	var ajaxDone = true;
 	var morePages = true;
+	var uploads = [];
+	
+	initUpload();
 	
 	$(window).scroll(scrolled);
 	$("#add-post").click(showAddPost);
@@ -14,8 +17,8 @@ $(function() {
 	$("#delete-post-button").click(deletePost);
 	$("#cancel-comment").click(closeAddComment);
 	$("#save-comment").click(saveComment);
-	//$("#search").keypress(searchKey);
 	$("#search").bind("search", searchKey);
+	
 	$("main").on("click", ".editable", showEditPost);
 	$("main").on("click", ".comment-editable", showEditComment);
 	$("main").on("click", ".comment-icon", showAddComment);
@@ -23,6 +26,24 @@ $(function() {
 	$("main").on("click", "#delete-comment", deleteComment);
 	
 	getPosts();
+	
+	function initUpload() {
+		var dzDiv = $("#upload");
+		dzDiv.addClass("dropzone");
+		var dz = new Dropzone("#upload", {
+			paramName : "files",
+			url : "/uploads"
+		});
+		dz.on("success", uploadComplete);
+		dz.on("error", function(file, msg) {
+			alert(msg);
+		});
+	}
+	
+	function uploadComplete(event, response) {
+		console.log(response);
+		uploads.push(response);
+	}
 	
 	function scrolled() {
 		if (ajaxDone && morePages) {
@@ -77,6 +98,88 @@ $(function() {
 		buildPosts(data);
 	}
 	
+
+	
+	function getPosts() {
+		ajaxDone = false;
+		var text = $("#search").val();
+		var url = "/get-posts";
+		var data = {
+			limit: limit,
+			offset: offset
+		};
+		if (text != "") {
+			url = "/search-posts";
+			data.text = text;
+		}
+		$.ajax({
+			url,
+			method: "get",
+			type: "json",
+			data,
+			error: function() {
+				ajaxDone = true;
+				ajaxError();
+			},
+			success: function(data) {
+				ajaxDone = true;
+				if ( data.length < limit) {
+					morePages = false;
+				}
+				buildPosts(data);
+			}
+		});
+	}
+	
+	function getComments() {
+	
+		var postId = $(this).parent().parent().find(".editable").data("id");
+		var $commentTemplate = $(this).parent().parent().find(".comment-template");		
+		
+		$.ajax({
+			url: "/get-comments",
+			method: "get",
+			type: "json",
+			data: { postId },
+			error: ajaxError,
+			success: function(data) {
+				//console.log(data);				
+				buildComments(data, $commentTemplate);
+			}
+		});
+	}
+	
+	function savePosts() {
+		
+		var $div = $("<div>");
+		var $images = $("<p></p>");
+		
+		for (var i = 0; i < uploads.length; i++) {
+			var $a = $("<a/>");
+			$a.attr("href", uploads[i].file);
+			$img = $("<img/>");
+			$img.attr("src", uploads[i].thumbnail);
+			$a.append($img);
+			$images.append($a);			
+		}
+		$div.append($images);
+		uploads = [];
+		console.log("editId", editId);
+		$.ajax({
+			url: "/save-post",
+			method: "post",
+			type: "json",
+			data: {
+				content: $("#create-post-popup textarea").val() + $div.html(),
+				id: editId
+			},
+			error: ajaxError,
+			success: function() {
+				reloadPosts();
+			}
+		});
+	}
+	
 	function saveComment() {
 		var content = $("#add-comment-popup textarea").val();		
 		$.ajax({
@@ -93,57 +196,6 @@ $(function() {
 			success: function(data) {
 				//console.log(data);
 				$("#add-comment-popup").hide();
-				reloadPosts();
-			}
-		});
-	}
-	
-	function getPosts() {
-		ajaxDone = false;
-		var text = $("#search").val();
-		var url = "/get-posts";
-		var data = {
-			limit: limit,
-			offset: offset
-		};
-		if (text != "") {
-			url = "/search-posts";
-			data.text = text;
-		}
-		//console.log("offset:", offset);
-		$.ajax({
-			url,
-			method: "get",
-			type: "json",
-			data,
-			error: function(data) {
-				ajaxDone = true;
-				ajaxError();
-			},
-			success: function(data) {
-				ajaxDone = true;
-				if ( data.length < limit) {
-					morePages = false;
-				}
-				buildPosts(data);
-			}
-		});
-	}
-	
-	function savePosts() {
-	
-		var content = $("#create-post-popup textarea").val();
-		
-		$.ajax({
-			url: "/save-post",
-			method: "post",
-			type: "json",
-			data: {
-				content: content,
-				id: editId
-			},
-			error: ajaxError,
-			success: function() {
 				reloadPosts();
 			}
 		});
@@ -178,25 +230,7 @@ $(function() {
 			}
 		});
 	}
-	
-	function getComments() {
-	
-		var postId = $(this).parent().parent().find(".editable").data("id");
-		var $commentTemplate = $(this).parent().parent().find(".comment-template");		
 		
-		$.ajax({
-			url: "/get-comments",
-			method: "get",
-			type: "json",
-			data: { postId },
-			error: ajaxError,
-			success: function(data) {
-				//console.log(data);				
-				buildComments(data, $commentTemplate);
-			}
-		});
-	}
-	
 	function ajaxError() {
 		alert("AJAX ERROR!");
 	}	
@@ -266,7 +300,7 @@ $(function() {
 	}
 	
 	function buildPosts(data) {
-		//console.log(data);		
+		console.log(data);		
 		for (var i = 0; i < data.length; i++) {
 			var $post = $("#post-template").clone();
 			$post.removeAttr("id");

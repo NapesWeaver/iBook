@@ -43,9 +43,8 @@ textarea {
 }
 
 #post-template, .post {
-	postition: relative;
+	position: relative;
 	background-color: white;
-	/* background-color: #B0B1FB; */
 	color: black;
 	margin-bottom: .3em;
 	padding: 1em;
