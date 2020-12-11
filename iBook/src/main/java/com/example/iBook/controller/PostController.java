@@ -39,6 +39,7 @@ public class PostController {
 			@RequestParam int offset) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName();
+		//
 		
 		Pageable page = PageRequest.of(offset / limit, limit);
 		

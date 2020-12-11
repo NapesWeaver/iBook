@@ -32,7 +32,7 @@ $(function() {
 		dzDiv.addClass("dropzone");
 		var dz = new Dropzone("#upload", {
 			paramName : "files",
-			url : "/uploads"
+			url : "/upload"
 		});
 		dz.on("success", uploadComplete);
 		dz.on("error", function(file, msg) {
@@ -155,7 +155,7 @@ $(function() {
 		var $images = $("<p></p>");
 		
 		for (var i = 0; i < uploads.length; i++) {
-			var $a = $("<a/>");
+			var $a = $("<a><a/>");
 			$a.attr("href", uploads[i].file);
 			$img = $("<img/>");
 			$img.attr("src", uploads[i].thumbnail);
