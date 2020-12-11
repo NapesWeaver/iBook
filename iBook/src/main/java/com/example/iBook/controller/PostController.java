@@ -30,6 +30,7 @@ public class PostController {
 		this.UserRepo = UserRepo;
 		this.PostRepo = PostRepo;		
 		this.CommentRepo = CommentRepo;
+		//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	}
 		
 	@RequestMapping("/search-posts")
@@ -39,7 +40,6 @@ public class PostController {
 			@RequestParam int offset) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName();
-		//
 		
 		Pageable page = PageRequest.of(offset / limit, limit);
 		
