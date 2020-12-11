@@ -30,7 +30,6 @@ public class PostController {
 		this.UserRepo = UserRepo;
 		this.PostRepo = PostRepo;		
 		this.CommentRepo = CommentRepo;
-		//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	}
 		
 	@RequestMapping("/search-posts")
